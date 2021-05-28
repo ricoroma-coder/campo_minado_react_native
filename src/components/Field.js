@@ -4,7 +4,7 @@ import params from '../params'
 import Mine from './Mine'
 import Flag from './Flag'
 
-export default ({ onOpen, mined, opened, nearMines, exploded, flagged }) => {
+export default ({ onSelect, onOpen, mined, opened, nearMines, exploded, flagged }) => {
     const styleField = [styles.field]
     if (opened) styleField.push(styles.opened)
     if (exploded) styleField.push(styles.exploded)
@@ -20,7 +20,8 @@ export default ({ onOpen, mined, opened, nearMines, exploded, flagged }) => {
     }
 
     return (
-        <TouchableWithoutFeedback onPress={onOpen}>
+        <TouchableWithoutFeedback onPress={onOpen}
+            onLongPress={onSelect}>
             <View style={styleField}>
             {!mined && opened && nearMines > 0
             ? <Text style={[styles.label, {color: color}]}> {nearMines}</Text>

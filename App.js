@@ -14,7 +14,8 @@ import {
 	openField,
 	hadExplosion,
 	wonGame,
-	showMines
+	showMines,
+	invertFlag
 } from './src/functions'
 import Mine from './src/components/Mine'
 
@@ -51,13 +52,24 @@ export default function App() {
 		setState({ board: board, lost: lost, won: won })
 	}
 
+	const onSelectField = (row, column) => {
+		const board = cloneBoard(state.board)
+		invertFlag(board, row, column)
+		const won = wonGame(board)
+
+		if (won) Alert.alert('Parabéns', 'Ganhou')
+
+		setState({ board: board, won: won })
+	}
+
 	return (
 	<View style={styles.container}>
 		<Text>Iniciando o Mines!!!</Text>
 		<Text>{params.getRowsAmount()}x{params.getColumnsAmount()}</Text>
 		<View style={styles.board}>
 			<MineField board={state.board} 
-				onOpenField={onOpenField} />
+				onOpenField={onOpenField} 
+				onSelectField={onSelectField} />
 		</View>
 	</View>
 	);
