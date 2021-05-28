@@ -1,10 +1,10 @@
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, TouchableWithoutFeedback, ProgressViewIOSComponent } from 'react-native'
 import params from '../params'
 import Mine from './Mine'
 import Flag from './Flag'
 
-export default ({ mined, opened, nearMines, exploded, flagged }) => {
+export default ({ onOpen, mined, opened, nearMines, exploded, flagged }) => {
     const styleField = [styles.field]
     if (opened) styleField.push(styles.opened)
     if (exploded) styleField.push(styles.exploded)
@@ -20,7 +20,8 @@ export default ({ mined, opened, nearMines, exploded, flagged }) => {
     }
 
     return (
-        <View style={styleField}>
+        <TouchableWithoutFeedback onPress={onOpen}>
+            <View style={styleField}>
             {!mined && opened && nearMines > 0
             ? <Text style={[styles.label, {color: color}]}> {nearMines}</Text>
             : false}
@@ -29,6 +30,7 @@ export default ({ mined, opened, nearMines, exploded, flagged }) => {
 
             {!opened && flagged ? <Flag /> : false}
         </View>
+        </TouchableWithoutFeedback>
     )
 }
 

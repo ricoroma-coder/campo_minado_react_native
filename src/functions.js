@@ -50,7 +50,7 @@ const cloneBoard = board => {
 const getNeighbors = (board, row, column) => {
     const neighbors = []
     const rows = [row - 1, row, row + 1]
-    const columns = [columns - 1, columns, columns + 1]
+    const columns = [column - 1, column, column + 1]
     rows.forEach(r => {
         columns.forEach(c => {
             const different = r !== row || c !== column
@@ -72,18 +72,18 @@ const openField = (board, row, column) => {
     const field = board[row][column]
     if (!field.opened) {
         field.opened = true
-        if (field.mined) field.exploded = true
-        else if(safeNeighborhood(board, row, column)) {
+        if (field.mined) {
+            field.exploded = true
+        } else if(safeNeighborhood(board, row, column)) {
             getNeighbors(board, row, column).forEach(n => openField(board, n.row, n.column))
-        }
-        else {
+        } else {
             const neighbors = getNeighbors(board, row, column)
             field.nearMines = neighbors.filter(n => n.mined).length
         }
     }
 }
 
-const fields = board => [].concat({...board})
+const fields = board => [].concat(...board)
 
 const hadExplosion = board => fields(board).filter(field => field.exploded).length > 0
 const pending = field => (field.mined && !field.flagged) || (!field.mined && !field.opened)
