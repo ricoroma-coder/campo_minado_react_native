@@ -1,31 +1,44 @@
 import { StatusBar } from 'expo-status-bar'
-import React from 'react'
+import React, { useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import params from './src/params'
-import Field from './src/components/Field'
+import MineField from './src/components/MineField'
+import { createMinedBoard } from './src/functions'
+import Mine from './src/components/Mine'
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-		<Field />
-		<Field opened />
-		<Field opened nearMines={1} />
-		<Field opened nearMines={2} />
-		<Field opened nearMines={3} />
-		<Field opened nearMines={6} />
-		<Field opened mined />
-		<Field opened mined exploded />
-		<Field flagged />
-		<Field flagged opened />
-    </View>
-  );
+
+	const minesAmount = () => {
+		const cols = params.getColumnsAmount()
+		const rows = params.getRowsAmount()
+		return Math.ceil(cols * rows * params.difficultLevel)
+	}
+
+	const cols = params.getColumnsAmount()
+	const rows = params.getRowsAmount()
+	const createState = {
+		board: createMinedBoard(rows, cols, minesAmount())
+	}
+	const [state, setState] = useState(createState)
+
+	return (
+	<View style={styles.container}>
+		<Text>Iniciando o Mines!!!</Text>
+		<Text>{params.getRowsAmount()}x{params.getColumnsAmount()}</Text>
+		<View style={styles.board}>
+			<MineField board={state.board} />
+		</View>
+	</View>
+	);
 }
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: '#fff',
+		justifyContent: 'flex-end',
+	},
+	board: {
 		alignItems: 'center',
-		justifyContent: 'center',
+		backgroundColor: '#AAA'
 	},
 });

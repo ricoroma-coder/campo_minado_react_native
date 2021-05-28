@@ -34,7 +34,7 @@ const spreadMines = (board, minesAmount) => {
 }
 
 const createMinedBoard = (rows, columns, minesAmount) => {
-    const board = createBoard(rows, column)
+    const board = createBoard(rows, columns)
     spreadMines(board, minesAmount)
     return board
 }
