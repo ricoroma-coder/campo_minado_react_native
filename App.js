@@ -1,8 +1,7 @@
 import { StatusBar } from 'expo-status-bar'
 import React, { useState } from 'react'
 import { 
-	StyleSheet, 
-	Text, 
+	StyleSheet,
 	View, 
 	Alert 
 } from 'react-native'
@@ -19,6 +18,7 @@ import {
 	flagsUsed
 } from './src/functions'
 import Header from './src/components/Header'
+import LevelSelection from './src/screen/LevelSelection'
 
 export default function App() {
 
@@ -33,7 +33,8 @@ export default function App() {
 	const createState = {
 		board: createMinedBoard(rows, cols, minesAmount()),
 		won: false,
-		lost: false
+		lost: false,
+		showLevelSelection: false,
 	}
 	const [state, setState] = useState(createState)
 
@@ -48,9 +49,11 @@ export default function App() {
 			Alert.alert('Perdeu', 'Que burro')
 		}
 
-		if (won) Alert.alert('Parabéns', 'Ganhou')
+		if (won) {
+			Alert.alert('Parabéns', 'Ganhou')
+		}
 
-		setState({ board: board, lost: lost, won: won })
+		setState({ board: board, lost: lost, won: won, showLevelSelection: false })
 	}
 
 	const onSelectField = (row, column) => {
@@ -58,15 +61,27 @@ export default function App() {
 		invertFlag(board, row, column)
 		const won = wonGame(board)
 
-		if (won) Alert.alert('Parabéns', 'Ganhou')
+		if (won) {
+			Alert.alert('Parabéns', 'Ganhou')
+		}
 
-		setState({ board: board, won: won })
+		setState({ board: board, won: won, showLevelSelection: false })
+	}
+
+	const onLevelSelected = level => {
+		params.difficultLevel = level
+		createState.board = createMinedBoard(rows, cols, minesAmount())
+		setState(createState)
 	}
 
 	return (
 	<View style={styles.container}>
-		<Header flagsLeft={minesAmount() - flagsUsed(state.board)}
-			onNewGame={() => setState(createState)} />
+		<LevelSelection isVisible={state.showLevelSelection}
+			onLevelSelected={onLevelSelected} 
+			onCancel={() => setState({ board: state.board, showLevelSelection: false })} />
+		<Header flagsLeft={minesAmount() - flagsUsed(state.board)} 
+			onNewGame={() => setState(createState)} 
+			onFlagPress={() => setState({ board: state.board, showLevelSelection: true })} />
 		<View style={styles.board}>
 			<MineField board={state.board} 
 				onOpenField={onOpenField} 
